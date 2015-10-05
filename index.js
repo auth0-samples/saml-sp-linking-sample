@@ -1,7 +1,13 @@
 var passport = require('passport');
 var SamlStrategy = require('passport-saml').Strategy;
+
 var express = require('express');
 var app = express();
+app.use(require('cookie-parser')());
+app.use(require('body-parser').urlencoded({ extended: true }));
+app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
+app.use(passport.initialize());
+app.use(passport.session());
 
 passport.use(new SamlStrategy(
     {
@@ -11,12 +17,12 @@ passport.use(new SamlStrategy(
     },
     function (profile, done) {
         console.log(profile);
-        done(null, profile);
+        return done(null, {
+            id: profile.nameID,
+            email: profile.sessionIndex, 
+       });
     }
 ));
-
-app.use(passport.initialize());
-app.use(passport.session());
 
 app.post('/login/callback',
          passport.authenticate('saml', { failureRedirect: '/error', failureFlash: true }),
