@@ -1,0 +1,27 @@
+{
+  "name": "saml-sp-linking-sample",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/auth0/saml-sp-linking-sample.git"
+  },
+  "author": "Rodrigo López Dato <rlopezdato@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/auth0/saml-sp-linking-sample/issues"
+  },
+  "homepage": "https://github.com/auth0/saml-sp-linking-sample#readme",
+  "dependencies": {
+    "body-parser": "^1.14.1",
+    "express": "^4.13.3",
+    "express-session": "^1.11.3",
+    "passport": "^0.3.0",
+    "passport-saml": "^0.12.0",
+    "underscore": "^1.8.3"
+  }
+}
