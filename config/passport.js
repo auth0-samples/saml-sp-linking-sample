@@ -3,7 +3,7 @@ const SamlStrategy = require('passport-saml').Strategy;
 
 function normalize(user) {
   return {
-    id: user['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'],
+    user_id: user['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'],
     email: user['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'],
     provider: user['http://schemas.auth0.com/identities/default/provider']
   };
@@ -12,14 +12,16 @@ function normalize(user) {
 const issuer = 'urn:yvonne-test.auth0.com';
 const entryPoint = 'https://yvonne-test.auth0.com/samlp/M7usYUzW6t7YlhpCBRoPPfDaPfyFfgXZ';
 
-function strategyCallback(profile, done) {
+function strategyCallback(req, profile, done) {
+  console.log(req);
   done(null, normalize(profile));
 }
 
 const loginStrategy = new SamlStrategy({
     issuer: issuer,
     path: '/login/callback',
-    entryPoint: entryPoint
+    entryPoint: entryPoint,
+    passReqToCallback: true
   },
   strategyCallback
 );

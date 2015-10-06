@@ -16,6 +16,15 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
+app.set('view engine', 'ejs');
+
+app.get('/', function(req, res) {
+  if (req.isAuthenticated()) {
+    res.render('index', req.user);
+  } else {
+    res.redirect('/login');
+  }
+});
 
 app.post('/login/callback',
   passport.authenticate('saml', {
@@ -23,7 +32,7 @@ app.post('/login/callback',
     failureFlash: true
   }),
   function(req, res) {
-    res.send(req.user);
+    res.redirect('/');
   }
 );
 
@@ -31,10 +40,14 @@ app.get('/login',
   passport.authenticate('saml', {
     failureRedirect: '/login',
     failureFlash: true
-  }),
-  function(req, res) {
-    res.redirect('/');
-  }
+  })
+);
+
+app.get('/link',
+  passport.authorize('saml', {
+    failureRedirect: '/link',
+    failureFlash: true
+  })
 );
 
 const server = app.listen(3000, function() {
