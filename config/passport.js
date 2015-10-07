@@ -12,8 +12,7 @@ function normalize(user) {
 const issuer = 'urn:yvonne-test.auth0.com';
 const entryPoint = 'https://yvonne-test.auth0.com/samlp/M7usYUzW6t7YlhpCBRoPPfDaPfyFfgXZ';
 
-function strategyCallback(req, profile, done) {
-  console.log(req);
+function strategyCallback(profile, done) {
   done(null, normalize(profile));
 }
 
@@ -21,13 +20,12 @@ const loginStrategy = new SamlStrategy({
     issuer: issuer,
     path: '/login/callback',
     entryPoint: entryPoint,
-    passReqToCallback: true
   },
   strategyCallback
 );
 
 function processUser(user, done) {
-  done(null,user);
+  done(null, user);
 }
 
 passport.use('saml', loginStrategy);

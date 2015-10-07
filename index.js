@@ -1,3 +1,5 @@
+'use strict';
+
 const passport = require('./config/passport');
 const express = require('express');
 const session = require('express-session');
@@ -19,37 +21,37 @@ app.use(passport.session());
 app.set('view engine', 'ejs');
 
 app.get('/', function(req, res) {
-  if (req.isAuthenticated()) {
-    res.render('index', req.user);
-  } else {
-    res.redirect('/login');
-  }
+  res.redirect('/login');
 });
 
 app.post('/login/callback',
-  passport.authenticate('saml', {
-    failureRedirect: '/error',
-    failureFlash: true
-  }),
+  function(req, res, next) {
+    if (!req.user) {
+      passport.authenticate('saml')(req, res, next);
+    } else {
+      passport.authorize('saml')(req, res, next);
+    }
+  },
   function(req, res) {
-    res.redirect('/');
+    if (req.account) {
+      // link accounts
+    }
+    if (req.user) {
+      let result = {
+        user: req.user,
+        account: req.account
+      };
+      res.render('index', result);
+    } else {
+      res.redirect('/login');
+    }
   }
 );
 
 app.get('/login',
-  passport.authenticate('saml', {
-    failureRedirect: '/login',
-    failureFlash: true
-  })
+  passport.authenticate('saml')
 );
 
-app.get('/link',
-  passport.authorize('saml', {
-    failureRedirect: '/link',
-    failureFlash: true
-  })
-);
-
-const server = app.listen(3000, function() {
+app.listen(3000, function() {
   console.log('Listening on port 3000');
 });
