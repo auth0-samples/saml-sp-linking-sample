@@ -38,24 +38,27 @@ app.post('/login/callback',
   },
   function(req, res) {
     if (req.account) {
-      // console.log(req.account);
-      // let tenant                  = process.env.AUTH0_DOMAIN;
-      // let primary_account_user_id = req.user.id; // should be something like this
+      console.log(req.account);
+      let tenant                  = process.env.AUTH0_DOMAIN;
+      let apiv2_token             = process.env.AUTH0_APIV2_TOKEN;
+      let primary_account_user_id = encodeURIComponent(req.user.user_id); 
 
-      // request({
-      //     url: 'https://' + tenant + '.auth0.com/api/v2/users/' + primary_account_user_id + '/identities', //URL to hit
-      //     method: 'POST',
-      //     body: {
-      //       // provider: 
-      //       // user_id:
-      //     },
-      // }, function(error, response, body){
-      //     if(error) {
-      //         console.log(error);
-      //     } else {
-      //         console.log(response.statusCode, body);
-      //     }
-      // });
+      request({
+          url: 'https://' + tenant + '.auth0.com/api/v2/users/' + primary_account_user_id + '/identities', //URL to hit
+          method: 'POST',
+          headers: {Authorization: 'Bearer ' + apiv2_token },
+          json: {
+            provider: req.account.provider,
+            user_id: req.account.user_id
+          },
+      }, function(error, response, body){
+          console.log(body);
+          if(error) {
+              console.log(error);
+          } else { 
+              console.log(response.statusCode.toString(), body);
+          }
+      });
     }
     if (req.user) {
       let result = {
