@@ -1,9 +1,9 @@
-const passport = require('./config/passport');
-const express = require('express');
-const session = require('express-session');
-const bodyParser = require('body-parser');
-const cookieParser = require('cookie-parser');
-const app = express();
+var passport = require('./config/passport');
+var express = require('express');
+var session = require('express-session');
+var bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser');
+var app = express();
 
 app.use(bodyParser.urlencoded({
   extended: true
