@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "engines": {
-    "iojs": "~3.3.1"
+    "node": "~4.1.2"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -13,11 +13,7 @@
     "type": "git",
     "url": "git+https://github.com/auth0/saml-sp-linking-sample.git"
   },
-<<<<<<< HEAD
-  "author": "Rodrigo López Dato <rlopezdato@gmail.com>",
-=======
   "author": "Rodrigo López Dato <rodrigo@auth0.com>",
->>>>>>> 44ba813ad8458191191917345ee0c501b9dc0456
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/auth0/saml-sp-linking-sample/issues"
@@ -25,21 +21,11 @@
   "homepage": "https://github.com/auth0/saml-sp-linking-sample#readme",
   "dependencies": {
     "body-parser": "^1.14.1",
-<<<<<<< HEAD
-    "express": "^4.13.3",
-    "express-session": "^1.11.3",
-    "passport": "^0.3.0",
-    "passport-saml": "^0.12.0",
-    "underscore": "^1.8.3",
-    "lodash": "~3.10.1",
-    "cookie-parser": "~1.4.0"
-=======
     "cookie-parser": "^1.4.0",
     "ejs": "^2.3.4",
     "express": "^4.13.3",
     "express-session": "^1.11.3",
     "passport": "^0.2.2",
     "passport-saml": "^0.12.0"
->>>>>>> 44ba813ad8458191191917345ee0c501b9dc0456
   }
 }
