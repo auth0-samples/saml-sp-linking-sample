@@ -1,12 +1,16 @@
 'use strict';
 
+const dotenv = require('dotenv');
+dotenv.load()
+
 const passport = require('./config/passport');
 const express = require('express');
 const session = require('express-session');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const app = express();
-  
+const request = require('request');
+
 app.use(bodyParser.urlencoded({
   extended: true
 }));
@@ -34,7 +38,24 @@ app.post('/login/callback',
   },
   function(req, res) {
     if (req.account) {
-      // link accounts
+      // console.log(req.account);
+      // let tenant                  = process.env.AUTH0_DOMAIN;
+      // let primary_account_user_id = req.user.id; // should be something like this
+
+      // request({
+      //     url: 'https://' + tenant + '.auth0.com/api/v2/users/' + primary_account_user_id + '/identities', //URL to hit
+      //     method: 'POST',
+      //     body: {
+      //       // provider: 
+      //       // user_id:
+      //     },
+      // }, function(error, response, body){
+      //     if(error) {
+      //         console.log(error);
+      //     } else {
+      //         console.log(response.statusCode, body);
+      //     }
+      // });
     }
     if (req.user) {
       let result = {
