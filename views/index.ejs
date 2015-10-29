@@ -5,7 +5,9 @@
   </head>
   <body>
     <% if (locals.user) { %>
-    <p>Logged in as <%= user.user_id %> / <%= user.email %>.</p>
+      <% if (user.user_id) { %>
+        <p>Logged in as <%= user.user_id %> / <%= user.email %>.</p>
+      <% } %>
     <p>Full profile:</p>
     <pre><%= JSON.stringify(user, null, 2) %></pre>
     <% } %>

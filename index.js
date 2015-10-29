@@ -9,7 +9,10 @@ const session = require('express-session');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const app = express();
-const request = require('request');
+const request = require('request-promise').defaults({
+  baseUrl: 'https://' + process.env.AUTH0_DOMAIN + '/api/v2/',
+  headers: { Authorization: 'Bearer ' + process.env.AUTH0_APIV2_TOKEN },
+});
 
 app.use(bodyParser.urlencoded({
   extended: true
@@ -38,29 +41,20 @@ app.post('/login/callback',
   },
   function(req, res) {
     if (req.account) {
-      console.log(req.account);
-      let tenant                  = process.env.AUTH0_DOMAIN;
-      let apiv2_token             = process.env.AUTH0_APIV2_TOKEN;
-      let primary_account_user_id = encodeURIComponent(req.user.user_id); 
-
-      request({
-          url: 'https://' + tenant + '.auth0.com/api/v2/users/' + primary_account_user_id + '/identities', //URL to hit
-          method: 'POST',
-          headers: {Authorization: 'Bearer ' + apiv2_token },
+      let primary_account_user_id = encodeURIComponent(req.user.user_id);
+      request.post({
+          url: 'users/' + primary_account_user_id + '/identities',
           json: {
             provider: req.account.provider,
             user_id: req.account.user_id
-          },
-      }, function(error, response, body){
-          console.log(body);
-          if(error) {
-              console.log(error);
-          } else { 
-              console.log(response.statusCode.toString(), body);
           }
+      }).then(function(user) {
+        res.render('index', {user: user, account: req.account});
+      }).catch(function(err) {
+        console.log(err);
+        res.status(err.statusCode).json(err.error);
       });
-    }
-    if (req.user) {
+    } else if (req.user) {
       let result = {
         user: req.user,
         account: req.account
