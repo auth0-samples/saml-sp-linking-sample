@@ -8,10 +8,13 @@ const express = require('express');
 const session = require('express-session');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const _ = require('lodash');
 const app = express();
 const request = require('request-promise').defaults({
   baseUrl: 'https://' + process.env.AUTH0_DOMAIN + '/api/v2/',
-  headers: { Authorization: 'Bearer ' + process.env.AUTH0_APIV2_TOKEN },
+  headers: {
+    Authorization: 'Bearer ' + process.env.AUTH0_APIV2_TOKEN
+  },
 });
 
 app.use(bodyParser.urlencoded({
@@ -41,25 +44,30 @@ app.post('/login/callback',
   },
   function(req, res) {
     if (req.account) {
-      let primary_account_user_id = encodeURIComponent(req.user.user_id);
+      const user_id = req.account['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'];
+      const provider = req.account['http://schemas.auth0.com/identities/default/provider'];
       request.post({
-          url: 'users/' + primary_account_user_id + '/identities',
-          json: {
-            provider: req.account.provider,
-            user_id: req.account.user_id
-          }
-      }).then(function(user) {
-        res.render('index', {user: user, account: req.account});
+        url: 'users/' + encodeURIComponent(user_id) + '/identities',
+        json: {
+          provider: provider,
+          user_id: user_id
+        }
+      }).then(function() {
+        res.render('index', {
+          user_id: user_id,
+          user: req.user,
+          account: req.account
+        });
       }).catch(function(err) {
-        console.log(err);
         res.status(err.statusCode).json(err.error);
       });
     } else if (req.user) {
-      let result = {
-        user: req.user,
-        account: req.account
-      };
-      res.render('index', result);
+      const user_id = req.user['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'];
+      const provider = req.user['http://schemas.auth0.com/identities/default/provider'];
+      res.render('index', {
+        user_id: user_id,
+        user: req.user
+      });
     } else {
       res.redirect('/login');
     }

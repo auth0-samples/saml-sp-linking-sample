@@ -1,19 +1,12 @@
 const passport = require('passport');
 const SamlStrategy = require('passport-saml').Strategy;
+require('dotenv').load();
 
-function normalize(user) {
-  return {
-    user_id: user['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'],
-    email: user['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'],
-    provider: user['http://schemas.auth0.com/identities/default/provider']
-  };
-}
-
-const issuer = 'urn:yvonne-test.auth0.com';
-const entryPoint = 'https://yvonne-test.auth0.com/samlp/M7usYUzW6t7YlhpCBRoPPfDaPfyFfgXZ';
+const issuer = 'urn:' + process.env.AUTH0_DOMAIN;
+const entryPoint = 'https://' + process.env.AUTH0_DOMAIN + '/samlp/' + process.env.AUTH0_CLIENT_ID;
 
 function strategyCallback(profile, done) {
-  done(null, normalize(profile));
+  done(null, profile);
 }
 
 const loginStrategy = new SamlStrategy({
